@@ -1,7 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:plan_my_onco/core/routes/app_router.dart';
 
+
+import '../app_router.dart';
 import 'injection.config.dart';
 
 /// Global instance of the dependency injection container.
@@ -18,7 +19,7 @@ Future<void> configureInjection() async {
   //   return;
   // }
   // `init()` is a generated function by injectable that registers all dependencies.
-  await locator.init();
+  locator.init();
 }
 
 /// A module for registering third-party dependencies and other concrete implementations.

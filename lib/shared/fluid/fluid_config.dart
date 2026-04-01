@@ -1,8 +1,11 @@
-/// This file defines a responsive scaling utility for creating "fluid" layouts
-/// that adapt smoothly to different screen sizes.
+// This file defines a responsive scaling utility for creating "fluid" layouts
+// that adapt smoothly to different screen sizes.
 import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
-import 'package:plan_my_onco/core/routes/injection/injection.dart';
+
+import '../../core/routes/injection/injection.dart';
+
+
 
 
 /// A configuration class for the fluid scaling system.
