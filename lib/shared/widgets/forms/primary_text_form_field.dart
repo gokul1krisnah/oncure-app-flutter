@@ -21,6 +21,8 @@ class PrimaryTextFormField extends StatelessWidget {
   final bool readOnly;
   final bool autoFocus;
   final TextInputAction? textInputAction;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   const PrimaryTextFormField({
     required this.controller,
@@ -38,6 +40,8 @@ class PrimaryTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.onChanged,
     this.textInputAction,
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   @override
@@ -62,9 +66,12 @@ class PrimaryTextFormField extends StatelessWidget {
           onChanged: onChanged,
           textInputAction: textInputAction,
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 8.79,
-              horizontal: 13.82,
+            isDense: true,
+            contentPadding: const EdgeInsets.fromLTRB(
+              14,
+              9,
+              14,
+              9,
             ),
             fillColor: fillColor,
             filled: filled,
@@ -74,6 +81,8 @@ class PrimaryTextFormField extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ).copyWith(fontSize: fluid.fluid(AppDim.d14, AppDim.d16)),
             hintFadeDuration: const Duration(milliseconds: 350),
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
 
             border:
                 border ??
