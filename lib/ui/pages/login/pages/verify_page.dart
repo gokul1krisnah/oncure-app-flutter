@@ -8,7 +8,6 @@ import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../../../../shared/widgets/button/primary_button.dart';
 
-
 @RoutePage()
 class VerifyPage extends StatefulWidget {
   const VerifyPage({super.key});
@@ -46,12 +45,12 @@ class _VerifyPageState extends State<VerifyPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Gap(24),
-                  // Placeholder for removed Back Button to maintain layout
+
                   Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
+                        context.router.pop();
                       },
                       child: Container(
                         width: 40,
@@ -104,98 +103,45 @@ class _VerifyPageState extends State<VerifyPage> {
                     ),
                   ),
                   const Gap(32),
+                  //PinPut Field
                   Pinput(
-                  length: 6,
-                  keyboardType: TextInputType.number,
-                  defaultPinTheme: PinTheme(
-                    width: 44,
-                    height: 44,
-                    textStyle:  const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    ),decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius:  BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE5E5E5)
-                      )
-                    )
-                  ),
-                  focusedPinTheme: PinTheme(
-                    width: 44,
-                    height: 44,
-                    textStyle:  const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-
+                    length: 6,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    keyboardType: TextInputType.number,
+                    defaultPinTheme: PinTheme(
+                      width: 44,
+                      height: 44,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFE5E5E5)),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppColors.primary,
-                        width: 1.2
-                      )
-                    )
+                    focusedPinTheme: PinTheme(
+                      width: 44,
+                      height: 44,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.primary,
+                          width: 1.2,
+                        ),
+                      ),
+                    ),
                   ),
-                  ),
-                  // Email / Mobile Field
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: List.generate(
-                  //     6,
-                  //     (index) => SizedBox(
-                  //       width: 44, // 🔥 slightly better spacing than 40
-                  //       height: 44,
-                  //       child: TextField(
-                  //         textAlign: TextAlign.center,
-                  //         keyboardType: TextInputType.number,
-                  //         maxLength: 1,
-                  //         style: const TextStyle(
-                  //           fontSize: 16,
-                  //           fontWeight: FontWeight.w500,
-                  //         ),
-                  //         decoration: InputDecoration(
-                  //           counterText: '',
-                  //           filled: true,
-                  //           fillColor:
-                  //               Colors.white, // 🔥 Figma looks white, not grey
-                  //           // 🔥 IMPORTANT: remove weird padding
-                  //           contentPadding: EdgeInsets.zero,
-
-                  //           border: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(
-                  //               12,
-                  //             ), // 🔥 matches Figma
-                  //             borderSide: const BorderSide(
-                  //               color: Color(0xFFE5E5E5),
-                  //             ),
-                  //           ),
-
-                  //           enabledBorder: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(12),
-                  //             borderSide: const BorderSide(
-                  //               color: Color(0xFFE5E5E5),
-                  //             ),
-                  //           ),
-
-                  //           focusedBorder: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(12),
-                  //             borderSide: const BorderSide(
-                  //               color:
-                  //                   AppColors.primary, // or your primary color
-                  //               width: 1.2,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   const Gap(27),
                   // Continue Button
                   PrimaryButton(
                     text: 'Verify OTP',
-
                     fontWeight: FontWeight.bold,
                     onPressed: () {
                       context.router.push(const CreateAccountRoute());
