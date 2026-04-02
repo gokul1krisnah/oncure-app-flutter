@@ -25,11 +25,13 @@ class PrimaryTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final double? width;
   final double? height;
+  final VoidCallback? onTap;
 
   const PrimaryTextFormField({
     required this.controller,
     this.label,
     super.key,
+    this.onTap,
     this.keyboardType,
     this.hintText,
     this.border,
@@ -61,6 +63,7 @@ class PrimaryTextFormField extends StatelessWidget {
         ],
 
         TextFormField(
+          onTap: onTap,
           autofocus: autoFocus,
           keyboardType: keyboardType,
           controller: controller,

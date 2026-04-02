@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../shared/fluid/fluid_config.dart';
@@ -24,6 +25,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   late final TextEditingController _genderController;
   late final TextEditingController _addressController;
 
+  final DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +46,27 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     _genderController.dispose();
     _addressController.dispose();
     super.dispose();
+  }
+
+  void _showCalendar() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        height: 400,
+        child: TableCalendar(
+          firstDay: DateTime(1900),
+          lastDay: DateTime.now(),
+          focusedDay: _focusedDay,
+          onDaySelected: (day, focusedDay) {
+            setState(() {
+              _selectedDay = day;
+              _dobController.text = '${day.day}-${day.month}-${day.year}';
+            });
+            context.router.pop();
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -138,6 +163,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           controller: _dobController,
                           hintText: 'Select date',
                           autoFocus: false,
+                          onTap: _showCalendar,
                           readOnly: true, // Likely opens a date picker
                           prefixIcon: const Icon(
                             Icons.calendar_today_outlined,
@@ -215,7 +241,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           height: 1.5,
                         ),
                         children: [
-                          const TextSpan(text: 'By registering, you agree to the '),
+                          const TextSpan(
+                            text: 'By registering, you agree to the ',
+                          ),
                           TextSpan(
                             text: 'Terms & Conditions\n',
                             style: TextStyle(
@@ -236,9 +264,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           ),
                           TextSpan(
                             text: ' of PlanMyOnco platform.',
-                            style: TextStyle(
-                              fontSize: Fluid.fluid(10, 12),
-                            ),
+                            style: TextStyle(fontSize: Fluid.fluid(10, 12)),
                           ),
                         ],
                       ),
