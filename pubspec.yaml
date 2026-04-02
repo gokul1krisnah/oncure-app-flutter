@@ -37,6 +37,7 @@ dependencies:
   gap: ^3.0.1
   get_it: ^9.1.1
   injectable: ^2.7.1+4
+  intl: ^0.20.2
   pinput: ^6.0.2
   table_calendar: ^3.2.0
 

@@ -1,13 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:table_calendar/table_calendar.dart';
+// import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../shared/fluid/fluid_config.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../../../widgets/button/primary_button.dart';
+import '../../../widgets/customs/calender_modal.dart';
+// import '../../../widgets/customs/custom_calender.dart';
 import '../../../widgets/forms/primary_text_form_field.dart';
 
 @RoutePage()
@@ -25,7 +27,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   late final TextEditingController _genderController;
   late final TextEditingController _addressController;
 
-  final DateTime _focusedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
   @override
@@ -49,25 +51,23 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
 
   void _showCalendar() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SizedBox(
-        height: 400,
-        child: TableCalendar(
-          firstDay: DateTime(1900),
-          lastDay: DateTime.now(),
-          focusedDay: _focusedDay,
-          onDaySelected: (day, focusedDay) {
-            setState(() {
-              _selectedDay = day;
-              _dobController.text = '${day.day}-${day.month}-${day.year}';
-            });
-            context.router.pop();
-          },
-        ),
-      ),
-    );
-  }
+  CalendarModal.show(
+    context: context,
+    focusedDay: _focusedDay,
+    selectedDay: _selectedDay,
+    onDateSelected: (selectedDate) {
+      setState(() {
+        _selectedDay = selectedDate;
+        _focusedDay = selectedDate;
+
+        _dobController.text =
+            '${selectedDate.day}-${selectedDate.month}-${selectedDate.year}';
+      });
+
+      context.router.pop(); // close modal
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) => Scaffold(
