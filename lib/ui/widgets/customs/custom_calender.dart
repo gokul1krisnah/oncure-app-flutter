@@ -36,8 +36,8 @@ class _CalenderCardState extends State<CalenderCard> {
     super.initState();
     _focusedDay = widget.initialFocusedDay;
     _selectedDay = widget.initialSelectedDay;
-    _startYear = _focusedDay.year - 60;
-    _endYear = _focusedDay.year + 10;
+    _startYear = _focusedDay.year - 85;
+    _endYear = _focusedDay.year + 5;
   }
 
   @override
@@ -100,9 +100,13 @@ class _CalenderCardState extends State<CalenderCard> {
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4), // 👈 spacing
+                        horizontal: 8,
+                        vertical: 4,
+                      ), // 👈 spacing
                       padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 12), // 👈 padding
+                        vertical: 10,
+                        horizontal: 12,
+                      ), // 👈 padding
                       decoration: BoxDecoration(
                         color: isSelected
                             ? primary.withOpacity(0.1)
@@ -142,8 +146,7 @@ class _CalenderCardState extends State<CalenderCard> {
       children: [
         // 🔥 HEADER
         Padding(
-          padding:
-              const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Row(
             children: [
               Text(
@@ -165,8 +168,7 @@ class _CalenderCardState extends State<CalenderCard> {
                         '${_focusedDay.year}',
                         style: theme.textTheme.titleMedium,
                       ),
-                      Icon(Icons.keyboard_arrow_down,
-                          color: primary),
+                      Icon(Icons.keyboard_arrow_down, color: primary),
                     ],
                   ),
                 ),
@@ -213,8 +215,7 @@ class _CalenderCardState extends State<CalenderCard> {
             focusedDay: _focusedDay,
             headerVisible: false,
 
-            selectedDayPredicate: (day) =>
-                isSameDay(_selectedDay, day),
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
 
             onDaySelected: (selected, focused) {
               setState(() {
@@ -233,8 +234,7 @@ class _CalenderCardState extends State<CalenderCard> {
                 shape: BoxShape.circle,
               ),
 
-              selectedTextStyle:
-                  const TextStyle(color: Colors.white),
+              selectedTextStyle: const TextStyle(color: Colors.white),
 
               todayDecoration: BoxDecoration(
                 border: Border.all(color: primary),

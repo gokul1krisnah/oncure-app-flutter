@@ -30,6 +30,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  final LayerLink _genderLayerLink = LayerLink();
+OverlayEntry? _genderOverlay;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +69,34 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
       context.router.pop(); // close modal
     },
+  );
+}
+
+
+
+void _showGenderSelector() {
+  final genders = ['Male', 'Female', 'Other'];
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text('Select Gender'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: genders.map((gender) => ListTile(
+              title: Text(gender),
+              onTap: () {
+                setState(() {
+                  _genderController.text = gender;
+                });
+                Navigator.pop(context);
+              },
+            )).toList(),
+        ),
+      ),
   );
 }
 
@@ -178,6 +209,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           label: 'Gender',
                           controller: _genderController,
                           hintText: 'Select gender',
+                          onTap: _showGenderSelector,
                           autoFocus: false,
                           readOnly:
                               true, // Likely opens a bottom sheet / dropdown
