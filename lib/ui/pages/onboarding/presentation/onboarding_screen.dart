@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/routes/app_router.gr.dart';
-import '../../../shared/fluid/fluid_config.dart';
-import '../../../shared/theme/app_colors.dart';
-import '../../../shared/theme/app_images.dart';
-import '../../../shared/widgets/button/primary_button.dart';
-import 'applications/onboarding_cubit.dart';
-import 'applications/onboarding_state.dart';
+import '../../../../core/routes/app_router.gr.dart';
+import '../../../../shared/fluid/fluid_config.dart';
+import '../../../../shared/theme/app_colors.dart';
+import '../../../../shared/theme/app_images.dart';
+import '../../../widgets/button/primary_button.dart';
+import '../applications/onboarding_cubit.dart';
+import '../applications/onboarding_state.dart';
 
 @RoutePage()
 class OnboardingPage extends StatefulWidget {

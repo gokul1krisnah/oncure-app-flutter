@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import '../../../core/routes/injection/injection.dart';
 import '../../../shared/fluid/fluid_config.dart';
 import '../../../shared/theme/app_colors.dart';
-import '../../theme/app_dim.dart';
+import '../../../shared/theme/app_dim.dart';
 
 
 class PrimaryTextFormField extends StatelessWidget {
@@ -23,6 +23,8 @@ class PrimaryTextFormField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final double? width;
+  final double? height;
 
   const PrimaryTextFormField({
     required this.controller,
@@ -42,6 +44,8 @@ class PrimaryTextFormField extends StatelessWidget {
     this.textInputAction,
     this.prefixIcon,
     this.suffixIcon,
+    this.width,
+    this.height,
   });
 
   @override
@@ -100,7 +104,7 @@ class PrimaryTextFormField extends StatelessWidget {
                 border ??
                 const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(16)),
-                  borderSide: BorderSide(color: AppColors.primaryBorder, width: 0.5),
+                  borderSide: BorderSide(color: AppColors.primary, width: 1),
                 ),
             errorBorder:
                 border ??

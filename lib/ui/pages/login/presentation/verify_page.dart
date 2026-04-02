@@ -6,7 +6,7 @@ import '../../../../core/routes/app_router.gr.dart';
 import '../../../../shared/fluid/fluid_config.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
-import '../../../../shared/widgets/button/primary_button.dart';
+import '../../../widgets/button/primary_button.dart';
 
 @RoutePage()
 class VerifyPage extends StatefulWidget {
@@ -56,11 +56,12 @@ class _VerifyPageState extends State<VerifyPage> {
                         width: 40,
                         height: 40,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFF5F5F5),
+                          color: Color(0xFFFFFFFF),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           Icons.arrow_back,
+                          
                           size: 20,
                           color: Colors.black,
                         ),
@@ -145,6 +146,7 @@ class _VerifyPageState extends State<VerifyPage> {
                     fontWeight: FontWeight.bold,
                     onPressed: () {
                       context.router.push(const CreateAccountRoute());
+
                     },
                   ),
                   const Gap(12),
@@ -167,29 +169,30 @@ class _VerifyPageState extends State<VerifyPage> {
                         style: TextStyle(
                           fontFamily: 'Manrope',
                           fontWeight: FontWeight.w400,
-                          fontSize: Fluid.fluid(10, 1),
+                          fontSize: Fluid.fluid(10, 16),
                           color: const Color(0xFF8C8C8C),
                           height: 1.5,
                         ),
-                        children: const [
-                          TextSpan(text: 'By verifying, you agree to the '),
+                        children: [
+                          const TextSpan(text: 'By verifying, you agree to the '),
                           TextSpan(
                             text: 'Terms & Conditions\n',
                             style: TextStyle(
-                              color: Color(0xFF4A4A4A),
+                              // color: Color(0xFF4A4A4A),
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w400,
+                              fontSize: Fluid.fluid(10, 16),
                             ),
                           ),
-                          TextSpan(text: 'and '),
-                          TextSpan(
+                          const TextSpan(text: 'and '),
+                          const TextSpan(
                             text: 'Privacy Policy',
                             style: TextStyle(
-                              color: Color(0xFF4A4A4A),
+                              // color: Color(0xFF4A4A4A),
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          TextSpan(text: ' of PlanMyOnco platform.'),
+                          const TextSpan(text: ' of PlanMyOnco platform.'),
                         ],
                       ),
                     ),

@@ -4,10 +4,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/routes/app_router.gr.dart';
-import '../../../shared/theme/app_images.dart';
-import 'application/splash_cubit.dart';
-import 'application/splash_state.dart';
+import '../../../../core/routes/app_router.gr.dart';
+import '../../../../shared/theme/app_images.dart';
+import '../application/splash_cubit.dart';
+import '../application/splash_state.dart';
 
 @RoutePage()
 class SplashScreen extends StatelessWidget implements AutoRouteWrapper {

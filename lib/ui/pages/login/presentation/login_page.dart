@@ -4,8 +4,8 @@ import '../../../../core/routes/app_router.gr.dart';
 import '../../../../shared/fluid/fluid_config.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
-import '../../../../shared/widgets/button/primary_button.dart';
-import '../../../../shared/widgets/forms/primary_text_form_field.dart';
+import '../../../widgets/button/primary_button.dart';
+import '../../../widgets/forms/primary_text_form_field.dart';
 
 
 @RoutePage()
@@ -174,16 +174,16 @@ class _LoginPageState extends State<LoginPage> {
                           TextSpan(
                             text: 'Terms & Conditions\n',
                             style: TextStyle(
-                              color: Color(0xFF4A4A4A),
+                              // color: Color(0xFF4A4A4A),
                               decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.w400,
+                              // fontWeight: FontWeight.w400,
                             ),
                           ),
                           TextSpan(text: 'and '),
                           TextSpan(
                             text: 'Privacy Policy',
                             style: TextStyle(
-                              color: Color(0xFF4A4A4A),
+                              // color: Color(0xFF4A4A4A),
                               decoration: TextDecoration.underline,
                             ),
                           ),

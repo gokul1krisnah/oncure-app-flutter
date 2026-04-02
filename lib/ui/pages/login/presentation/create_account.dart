@@ -2,11 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../core/routes/app_router.gr.dart';
 import '../../../../shared/fluid/fluid_config.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
-import '../../../../shared/widgets/button/primary_button.dart';
-import '../../../../shared/widgets/forms/primary_text_form_field.dart';
+import '../../../widgets/button/primary_button.dart';
+import '../../../widgets/forms/primary_text_form_field.dart';
 
 @RoutePage()
 class CreateAccountPage extends StatefulWidget {
@@ -68,7 +69,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         width: 40,
                         height: 40,
                         decoration: const BoxDecoration(
-                          color: Color(0xFFF5F5F5),
+                          color: Color(0xFFFFFFFF),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -79,7 +80,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                     ),
                   ),
-                  const Gap(40), 
+                  const Gap(40),
                   // Logo
                   Center(
                     child: Image.asset(
@@ -180,7 +181,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     text: 'Create Account',
                     fontWeight: FontWeight.bold,
                     onPressed: () {
-                      // TODO: implement account creation
+                      context.router.push(const HomeRoute());
                     },
                   ),
                   const Gap(12),
@@ -188,7 +189,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   // Information securely stored text
                   Center(
                     child: Text(
-                      "Your information is securely stored and used only for care\ncoordination.",
+                      'Your information is securely stored and used only for care\ncoordination.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Manrope',
@@ -213,25 +214,32 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           color: const Color(0xFF8C8C8C),
                           height: 1.5,
                         ),
-                        children: const [
-                          TextSpan(text: 'By registering, you agree to the '),
+                        children: [
+                          const TextSpan(text: 'By registering, you agree to the '),
                           TextSpan(
                             text: 'Terms & Conditions\n',
                             style: TextStyle(
-                              color: Color(0xFF4A4A4A),
+                              // color: Color(0xFF4A4A4A),
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w400,
+                              fontSize: Fluid.fluid(10, 12),
                             ),
                           ),
-                          TextSpan(text: 'and '),
+                          const TextSpan(text: 'and '),
                           TextSpan(
                             text: 'Privacy Policy',
                             style: TextStyle(
-                              color: Color(0xFF4A4A4A),
+                              // color: Color(0xFF4A4A4A),
                               decoration: TextDecoration.underline,
+                              fontSize: Fluid.fluid(10, 12),
                             ),
                           ),
-                          TextSpan(text: ' of PlanMyOnco platform.'),
+                          TextSpan(
+                            text: ' of PlanMyOnco platform.',
+                            style: TextStyle(
+                              fontSize: Fluid.fluid(10, 12),
+                            ),
+                          ),
                         ],
                       ),
                     ),
