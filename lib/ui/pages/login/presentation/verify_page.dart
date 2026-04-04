@@ -46,7 +46,7 @@ class _VerifyPageState extends State<VerifyPage> {
           initial: () {},
           loading: () {},
           error: (error) {
-            SnackBarAlert().showToast(message: 'Enter Valid otp');
+            SnackBarAlert().showToast(message: error, isWarning: true);
           },
           navigateToCreateAccount: () {
             context.router.push(const CreateAccountRoute());
