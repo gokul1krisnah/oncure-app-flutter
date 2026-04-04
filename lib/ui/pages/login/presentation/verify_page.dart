@@ -1,12 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pinput/pinput.dart';
 import '../../../../core/routes/app_router.gr.dart';
 import '../../../../shared/fluid/fluid_config.dart';
+import '../../../../shared/snackbar_alerts/snack_alert.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../../../widgets/button/primary_button.dart';
+import '../application/otp_page/verify_cubit.dart';
+import '../application/otp_page/verify_state.dart';
 
 @RoutePage()
 class VerifyPage extends StatefulWidget {
@@ -18,11 +22,13 @@ class VerifyPage extends StatefulWidget {
 
 class _VerifyPageState extends State<VerifyPage> {
   late final TextEditingController _emailOrMobileController;
+  late final TextEditingController _otpController;
 
   @override
   void initState() {
     super.initState();
     _emailOrMobileController = TextEditingController();
+    _otpController = TextEditingController();
   }
 
   @override
@@ -32,7 +38,22 @@ class _VerifyPageState extends State<VerifyPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => BlocProvider(create: (_) => VerifyCubit(),
+    
+    child: BlocListener<VerifyCubit, VerifyState>(
+      listener: (context, state) {
+        state.when(
+          initial: () {},
+          loading: () {},
+          error: (error) {
+            SnackBarAlert().showToast(message: 'Enter Valid otp');
+          },
+          navigateToCreateAccount: () {
+            context.router.push(const CreateAccountRoute());
+          },
+        );
+      },
+      child: Scaffold(
     backgroundColor: Colors.white,
     body: SafeArea(
       child: LayoutBuilder(
@@ -45,7 +66,7 @@ class _VerifyPageState extends State<VerifyPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Gap(24),
-
+  
                   Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
@@ -106,6 +127,7 @@ class _VerifyPageState extends State<VerifyPage> {
                   const Gap(32),
                   //PinPut Field
                   Pinput(
+                    controller: _otpController,
                     length: 6,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     keyboardType: TextInputType.number,
@@ -145,8 +167,9 @@ class _VerifyPageState extends State<VerifyPage> {
                     text: 'Verify OTP',
                     fontWeight: FontWeight.bold,
                     onPressed: () {
-                      context.router.push(const CreateAccountRoute());
-
+                      final otp = _otpController.text.trim();
+                      context.read<VerifyCubit>().verifyOtp(otp);
+  
                     },
                   ),
                   const Gap(12),
@@ -205,5 +228,8 @@ class _VerifyPageState extends State<VerifyPage> {
         ),
       ),
     ),
+  
+    )
+  )
   );
 }

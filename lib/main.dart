@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 import 'core/routes/app_router.dart';
 import 'core/routes/injection/injection.dart';
@@ -8,7 +9,7 @@ import 'shared/fluid/fluid_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureInjection();
-  runApp(MyApp());
+  runApp(OverlaySupport.global(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
