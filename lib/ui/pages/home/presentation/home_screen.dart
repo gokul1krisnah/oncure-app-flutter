@@ -1,8 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import 'package:hive_ce_flutter/hive_flutter.dart';
+import '../../../../core/injection/injection.dart';
+import '../../../../core/model/user/user_model.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../../../widgets/button/primary_button.dart';
+
 @RoutePage()
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,12 +16,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final user = locator<Box<UserModel>>().get('user');
   int _selectedIndex = 0;
+
+  static const Color kPurple = Color(0xFF7B5EA7);
+  static const Color kPrimaryDark = Color(0xFF3D2B6B);
+  static const Color kBg = Color(0xFFF0F0F5);
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: const Color(0xFFF0F0F5),
+        backgroundColor: kBg,
+        extendBody: true,
         body: SafeArea(
+          bottom: false,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildFindDoctors(),
                 const SizedBox(height: 16),
                 _buildBlogs(),
-                const SizedBox(height: 80),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -37,68 +48,69 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: _buildBottomNavBar(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
-          backgroundColor: const Color(0xFF7B5EA7),
+          backgroundColor: kPurple,
+          elevation: 6,
           shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white, size: 28),
+          child: const Icon(Icons.add, color: Colors.white, size: 30),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       );
 
-  // ─── App Bar ────────────────────────────────────────────────────────────────
+  // ─── App Bar ─────────────────────────────────────────────────────────────────
   Widget _buildAppBar() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      AppImages.splashImage,
-                      height: 28,
-                      fit: BoxFit.contain,
-                    ),
-                  ],
-                ),
-              ],
+            // Logo image from assets
+            Image.asset(
+              AppImages.splashImage,
+              height: 32,
+              fit: BoxFit.contain,
             ),
+            // Notification bell
             Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.08),
-                        blurRadius: 6,
+                        blurRadius: 8,
                         offset: const Offset(0, 2),
-                      )
+                      ),
                     ],
                   ),
-                  child: const Icon(Icons.notifications_outlined,
-                      color: Color(0xFF7B5EA7), size: 22),
+                  child: const Icon(
+                    Icons.notifications_outlined,
+                    color: kPurple,
+                    size: 22,
+                  ),
                 ),
                 Positioned(
-                  top: -2,
-                  right: -2,
+                  top: -1,
+                  right: -1,
                   child: Container(
-                    width: 16,
-                    height: 16,
+                    width: 17,
+                    height: 17,
                     decoration: const BoxDecoration(
-                        color: Color(0xFFE53935), shape: BoxShape.circle),
+                      color: Color(0xFFE53935),
+                      shape: BoxShape.circle,
+                    ),
                     child: const Center(
-                      child: Text('3',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold)),
+                      child: Text(
+                        '3',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -108,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  // ─── Welcome Card ────────────────────────────────────────────────────────────
+  // ─── Welcome Card ─────────────────────────────────────────────────────────────
   Widget _buildWelcomeCard() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Container(
@@ -118,15 +130,15 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 10,
+                color: Colors.black.withOpacity(0.07),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
-              )
+              ),
             ],
           ),
           child: Stack(
             children: [
-              // ── splashBottom as right-side background with transparency ──
+              // ── Background floral/splash image (right side, semi-transparent) ──
               Positioned(
                 right: 0,
                 top: 0,
@@ -136,41 +148,70 @@ class _HomeScreenState extends State<HomeScreen> {
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
-                  child: Opacity(
-                    opacity: 0.45, // 👈 adjust 0.0–1.0 for more/less transparency
-                    child: Image.asset(
-                      AppImages.splashBottom,
-                      fit: BoxFit.cover,
-                      width: 180,
+                  child: ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.white,
+                        Colors.transparent,
+                      ],
+                      stops: [0.0, 0.45],
+                    ).createShader(bounds),
+                    blendMode: BlendMode.dstOut,
+                    child: Opacity(
+                      opacity: 0.55,
+                      child: Image.asset(
+                        AppImages.home,
+                        width: 200,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
               ),
 
-              // ── Foreground content ──
+              // ── Foreground text + button ──
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Hey Praveen!',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF3D2B6B),
+                    // Hey {name}!
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(
+                            text: 'Hey ',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF3D2B6B),
+                            ),
+                          ),
+                          TextSpan(
+                            text: '${user?.name ?? 'Praveen'}!',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF3D2B6B),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     const Text(
                       'Start by registering your first case to manage\nyour health details and connect with medical\nexperts.',
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF888888),
-                        height: 1.5,
+                        fontSize: 12.5,
+                        color: Color(0xFF999999),
+                        height: 1.55,
                       ),
                     ),
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 95),
                     SizedBox(
                       width: double.infinity,
                       child: PrimaryButton(
@@ -186,37 +227,53 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  // ─── Find Doctors ────────────────────────────────────────────────────────────
+  // ─── Find Doctors ─────────────────────────────────────────────────────────────
   Widget _buildFindDoctors() {
     final doctors = [
-      _DoctorModel('Chris Friedkly', 'Medical Oncologist',
+      const _DoctorModel('Chris Friedkly', 'Medical Oncologist',
           'assets/images/doctor1.png', false),
-      _DoctorModel('Maggie Johnson', 'Radiation Oncologist',
+      const _DoctorModel('Maggie Johnson', 'Radiation Oncologist',
           'assets/images/doctor2.png', true),
-      _DoctorModel('Gael Harry', 'Specialized Oncologist',
+      const _DoctorModel('Gael Harry', 'Specialized Oncologist',
           'assets/images/doctor3.png', false),
     ];
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Find Doctors',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF2D2D2D))),
+              const Text(
+                'Find Doctors',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D2D2D),
+                ),
+              ),
               TextButton(
                 onPressed: () {},
-                child: const Text('See all',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF7B5EA7))),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Text(
+                  'See all',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: kPurple,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 6),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
@@ -224,9 +281,10 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2))
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
             ],
           ),
           child: ListView.separated(
@@ -234,41 +292,59 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: doctors.length,
             separatorBuilder: (_, __) => const Divider(
-                height: 1, thickness: 0.5, indent: 60, endIndent: 16),
-            itemBuilder: (context, index) {
-              final doc = doctors[index];
-              return _DoctorTile(doctor: doc);
-            },
+              height: 1,
+              thickness: 0.5,
+              indent: 62,
+              endIndent: 16,
+              color: Color(0xFFEEEEEE),
+            ),
+            itemBuilder: (context, index) =>
+                _DoctorTile(doctor: doctors[index]),
           ),
         ),
       ],
     );
   }
 
-  // ─── Blogs ───────────────────────────────────────────────────────────────────
+  // ─── Blogs ────────────────────────────────────────────────────────────────────
   Widget _buildBlogs() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Blogs',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2D2D2D))),
+                const Text(
+                  'Blogs',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF2D2D2D),
+                  ),
+                ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('See all',
-                      style:
-                          TextStyle(fontSize: 13, color: Color(0xFF7B5EA7))),
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text(
+                    'See all',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: kPurple,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
+          const SizedBox(height: 6),
           SizedBox(
-            height: 160,
+            height: 162,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -280,48 +356,66 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
 
-  // ─── Bottom Nav Bar ──────────────────────────────────────────────────────────
-  Widget _buildBottomNavBar() => BottomAppBar(
-        color: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        elevation: 12,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.home_outlined,
-                selectedIcon: Icons.home,
-                label: 'Home',
-                selected: _selectedIndex == 0,
-                onTap: () => setState(() => _selectedIndex = 0),
+  // ─── Bottom Nav Bar ───────────────────────────────────────────────────────────
+  Widget _buildBottomNavBar() => Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: BottomAppBar(
+            color: Colors.white,
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 8,
+            elevation: 0,
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              height: 62,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _NavItem(
+                    icon: Icons.home_outlined,
+                    selectedIcon: Icons.home_rounded,
+                    label: 'Home',
+                    selected: _selectedIndex == 0,
+                    onTap: () => setState(() => _selectedIndex = 0),
+                  ),
+                  const SizedBox(width: 64),
+                  _NavItem(
+                    icon: Icons.person_outline_rounded,
+                    selectedIcon: Icons.person_rounded,
+                    label: 'Profile',
+                    selected: _selectedIndex == 1,
+                    onTap: () => setState(() => _selectedIndex = 1),
+                  ),
+                ],
               ),
-              const SizedBox(width: 48), // space for FAB notch
-              _NavItem(
-                icon: Icons.person_outline,
-                selectedIcon: Icons.person,
-                label: 'Profile',
-                selected: _selectedIndex == 1,
-                onTap: () => setState(() => _selectedIndex = 1),
-              ),
-            ],
+            ),
           ),
         ),
       );
 }
 
-// ─── Doctor Model ─────────────────────────────────────────────────────────────
+// ─── Doctor Model ──────────────────────────────────────────────────────────────
 class _DoctorModel {
   final String name;
   final String specialty;
   final String imagePath;
   final bool hasArrow;
-  _DoctorModel(this.name, this.specialty, this.imagePath, this.hasArrow);
+  const _DoctorModel(this.name, this.specialty, this.imagePath, this.hasArrow);
 }
 
-// ─── Doctor Tile ─────────────────────────────────────────────────────────────
+// ─── Doctor Tile ──────────────────────────────────────────────────────────────
 class _DoctorTile extends StatelessWidget {
   final _DoctorModel doctor;
   const _DoctorTile({required this.doctor});
@@ -329,29 +423,41 @@ class _DoctorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         leading: CircleAvatar(
-          radius: 22,
-          backgroundImage: AssetImage(doctor.imagePath),
+          radius: 23,
           backgroundColor: const Color(0xFFEDE7F6),
+          backgroundImage: AssetImage(doctor.imagePath),
         ),
-        title: Text(doctor.name,
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF2D2D2D))),
-        subtitle: Text(doctor.specialty,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF9E8CB5))),
+        title: Text(
+          doctor.name,
+          style: const TextStyle(
+            fontSize: 13.5,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
+        subtitle: Text(
+          doctor.specialty,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF9E8CB5),
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         trailing: doctor.hasArrow
             ? Container(
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
                   color: const Color(0xFFEDE7F6),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(9),
                 ),
-                child: const Icon(Icons.arrow_forward_ios,
-                    size: 14, color: Color(0xFF7B5EA7)),
+                child: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 13,
+                  color: Color(0xFF7B5EA7),
+                ),
               )
             : null,
       );
@@ -363,78 +469,75 @@ class _BlogCard extends StatelessWidget {
   const _BlogCard({required this.index});
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: 150,
-        decoration: BoxDecoration(
+  Widget build(BuildContext context) => SizedBox(
+        width: 148,
+        child: ClipRRect(
           borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 6,
-                offset: const Offset(0, 2))
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Blog image — swap Container with:
-            // Image.asset('assets/images/blog${index + 1}.jpg',
-            //   fit: BoxFit.cover, width: double.infinity, height: double.infinity)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: const Color(0xFFB39DDB),
-                child:
-                    const Icon(Icons.image, color: Colors.white54, size: 48),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // ── Real blog image — replace color container with Image.asset ──
+              Image.asset(
+                'assets/images/blog${index + 1}.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: const Color(0xFFB39DDB),
+                  child: const Icon(Icons.image,
+                      color: Colors.white38, size: 40),
+                ),
               ),
-            ),
 
-            // Gradient overlay
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Container(
-                decoration: const BoxDecoration(
+              // ── Dark gradient overlay from bottom ──
+              DecoratedBox(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black54],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.65),
+                    ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
+                    stops: const [0.35, 1.0],
                   ),
                 ),
               ),
-            ),
 
-            // Bookmark icon
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.85),
-                  shape: BoxShape.circle,
+              // ── Bookmark icon top-right ──
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.88),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.bookmark_border_rounded,
+                    size: 15,
+                    color: Color(0xFF7B5EA7),
+                  ),
                 ),
-                child: const Icon(Icons.bookmark_border,
-                    size: 16, color: Color(0xFF7B5EA7)),
               ),
-            ),
 
-            // Title
-            const Positioned(
-              left: 10,
-              right: 10,
-              bottom: 10,
-              child: Text(
-                'Early Detection Saves Lives',
-                style: TextStyle(
+              // ── Title bottom-left ──
+              const Positioned(
+                left: 10,
+                right: 10,
+                bottom: 10,
+                child: Text(
+                  'Early Detection Saves Lives',
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 11.5,
                     fontWeight: FontWeight.w600,
-                    height: 1.3),
+                    height: 1.35,
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 }
@@ -448,11 +551,7 @@ class _NavItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const _NavItem({
-    required this.icon,
-    required this.selectedIcon,
-    required this.label,
-    required this.selected,
-    required this.onTap,
+    required this.icon, required this.selectedIcon, required this.label, required this.selected, required this.onTap, super.key,
   });
 
   @override
@@ -460,7 +559,7 @@ class _NavItem extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: SizedBox(
-          width: 60,
+          width: 64,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -469,9 +568,9 @@ class _NavItem extends StatelessWidget {
                 color: selected
                     ? const Color(0xFF7B5EA7)
                     : const Color(0xFFBDBDBD),
-                size: 24,
+                size: 25,
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 3),
               Text(
                 label,
                 style: TextStyle(
@@ -480,7 +579,7 @@ class _NavItem extends StatelessWidget {
                       ? const Color(0xFF7B5EA7)
                       : const Color(0xFFBDBDBD),
                   fontWeight:
-                      selected ? FontWeight.w600 : FontWeight.w400,
+                      selected ? FontWeight.w700 : FontWeight.w400,
                 ),
               ),
             ],

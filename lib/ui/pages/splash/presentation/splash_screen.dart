@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/routes/app_router.gr.dart';
+import '../../../../shared/snackbar_alerts/snack_alert.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../application/splash_cubit.dart';
 import '../application/splash_state.dart';
@@ -22,11 +23,22 @@ class SplashScreen extends StatelessWidget implements AutoRouteWrapper {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
         body: BlocConsumer<SplashCubit, SplashState>(
-          listenWhen: (previous, current) => current is NavigateToOnboarding,
           listener: (context, state) {
-            if (state is NavigateToOnboarding) {
-              context.router.push(const OnboardingRoute());
-            }
+            state.when(
+              onLoading: () {},
+              navigateToOnboarding: () {
+                context.router.replace(const OnboardingRoute());
+              },
+              navigateToLogin: () {
+                context.router.replace(const LoginRoute());
+              },
+              navigateToHome: () {
+                context.router.replace(const HomeRoute());
+              },
+              error: (error) {
+                SnackBarAlert().showToast(message: error, isWarning: true);
+              },
+            );
           },
           builder: (context, state) => state.maybeMap(
               orElse: () => const Text('ERROR'),

@@ -3,7 +3,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../core/routes/injection/injection.dart';
+import '../../core/injection/injection.dart';
 
 
 

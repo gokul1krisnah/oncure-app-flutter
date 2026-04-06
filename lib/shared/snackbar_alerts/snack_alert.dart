@@ -32,7 +32,14 @@ class SnackBarAlert {
           child: Container(
             margin: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              boxShadow: [BoxShadow(color: Colors.white60, offset: Offset(0, 2), blurRadius: 100, spreadRadius: 10)],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white60,
+                  offset: Offset(0, 2),
+                  blurRadius: 100,
+                  spreadRadius: 10,
+                ),
+              ],
             ),
             child: Material(
               color: isWarning ? AppColors.errorRed : AppColors.secondary,
@@ -41,15 +48,25 @@ class SnackBarAlert {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 15, bottom: 15, start: 15),
+                      padding: const EdgeInsetsDirectional.only(
+                        top: 15,
+                        bottom: 15,
+                        start: 15,
+                      ),
                       child: Text(
                         message,
-                        style: const TextStyle(color: AppColors.white, fontSize: 12, fontWeight: FontWeight.w400),
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
                   InkWell(
-                    splashColor: isWarning ? AppColors.errorRed : AppColors.primary,
+                    splashColor: isWarning
+                        ? AppColors.errorRed
+                        : AppColors.primary,
                     borderRadius: const BorderRadius.all(Radius.circular(12)),
                     onTap: () {
                       if (onTap != null) {
@@ -61,7 +78,11 @@ class SnackBarAlert {
                       padding: const EdgeInsets.all(15),
                       child: Text(
                         actionText ?? 'Dismiss',
-                        style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.w600, fontSize: 12),
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
@@ -74,7 +95,12 @@ class SnackBarAlert {
     );
   }
 
-  void showCustomToast({required String message, required Function onTap, bool isTop = false, bool isWarning = false}) {
+  void showCustomToast({
+    required String message,
+    required Function onTap,
+    bool isTop = false,
+    bool isWarning = false,
+  }) {
     hide();
     currentEntry = showOverlayNotification(
       position: isTop ? NotificationPosition.top : NotificationPosition.bottom,
@@ -90,7 +116,14 @@ class SnackBarAlert {
           child: Container(
             margin: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              boxShadow: [BoxShadow(color: Colors.white60, offset: Offset(0, 2), blurRadius: 100, spreadRadius: 10)],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white60,
+                  offset: Offset(0, 2),
+                  blurRadius: 100,
+                  spreadRadius: 10,
+                ),
+              ],
             ),
             child: Material(
               color: isWarning ? AppColors.errorRed : AppColors.primary,
@@ -103,10 +136,18 @@ class SnackBarAlert {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.only(top: 15, bottom: 15, start: 15),
+                    padding: const EdgeInsetsDirectional.only(
+                      top: 15,
+                      bottom: 15,
+                      start: 15,
+                    ),
                     child: Text(
                       message,
-                      style: const TextStyle(color: AppColors.white, fontSize: 12, fontWeight: FontWeight.w400),
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
@@ -121,7 +162,6 @@ class SnackBarAlert {
   void hide() {
     if (currentEntry != null) {
       currentEntry?.dismiss();
-      
     }
   }
 }

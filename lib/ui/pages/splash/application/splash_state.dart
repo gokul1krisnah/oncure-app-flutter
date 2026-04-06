@@ -9,7 +9,9 @@ abstract class SplashState with _$SplashState {
 
   const factory SplashState.navigateToOnboarding() = NavigateToOnboarding;
 
-  
+  const factory SplashState.navigateToLogin() = NavigateToLogin;
+
+  const factory SplashState.navigateToHome() = NavigateToHome;
 
   const factory SplashState.error(String messege) = SplashError;
 }

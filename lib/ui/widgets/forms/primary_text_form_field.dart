@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import '../../../core/routes/injection/injection.dart';
+import '../../../core/injection/injection.dart';
 import '../../../shared/fluid/fluid_config.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/theme/app_dim.dart';

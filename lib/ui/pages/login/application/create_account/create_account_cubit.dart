@@ -1,6 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:injectable/injectable.dart';
+
+import '../../../../../core/injection/injection.dart';
+import '../../../../../core/model/settings/settings_model.dart';
+import '../../../../../core/model/user/user_model.dart';
 import 'create_account_state.dart';
 
+@injectable
 class CreateAccountCubit extends Cubit<CreateAccountState> {
   CreateAccountCubit() : super(const CreateAccountState.initial());
 
@@ -58,8 +65,30 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
 
     emit(const CreateAccountState.initial());
 
-    // 🔥 later API call here
+    // 🔥 CREATE USER
+    final user = UserModel(
+      name: name,
+      email: email,
+      phoneCode: '+91',
+      phoneNumber: '',
+      dob: dob,
+      gender: gender,
+      address: address,
+    );
 
+    // 🔥 SAVE USER
+    await locator<Box<UserModel>>().put('user', user);
+
+    // 🔥 SAVE SETTINGS (THIS IS THE MAIN FIX 💥)
+    await locator<Box<SettingsModel>>().put(
+      'settings',
+      const SettingsModel(
+        hasOnboarded: true,
+        hasLogged: true,
+      ),
+    );
+
+    // 🔥 NAVIGATE
     emit(const CreateAccountState.navigateToHome());
   }
 }
