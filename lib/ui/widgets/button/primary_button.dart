@@ -9,16 +9,18 @@ class PrimaryButton extends StatelessWidget {
   final IconData? icon;
   final Color? bgColor;
   final FontWeight? fontWeight;
-  
+  final FontStyle? fontStyle;
+  final String? fontFamily;
 
   // 2. Create the constructor to receive these properties
   const PrimaryButton({
     required this.text,
     required this.onPressed,
-    this.icon, 
+    this.icon,
     this.bgColor,
     this.fontWeight,
-    super.key,
+    this.fontStyle,
+    this.fontFamily,
   });
 
   // 3. Build the UI for the button
@@ -50,7 +52,10 @@ class PrimaryButton extends StatelessWidget {
     final List<Widget> contentWidgets = [
       Text(
         text,
-        style: TextStyle(fontWeight: fontWeight ?? FontWeight.w600, fontSize: 16),
+        style: TextStyle(
+          fontWeight: fontWeight ?? FontWeight.w600,
+          fontSize: 16,
+        ),
       ),
     ];
 

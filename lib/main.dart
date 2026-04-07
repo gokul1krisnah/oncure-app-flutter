@@ -11,8 +11,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await HiveConfig.init();
-  
-
   await configureInjection();
   runApp(OverlaySupport.global(child: MyApp()));
 }

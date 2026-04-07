@@ -20,7 +20,6 @@ class SplashCubit extends Cubit<SplashState> {
 
     if (isClosed) return;
 
-    
     if (settings == null || !settings.hasOnboarded) {
       emit(const SplashState.navigateToOnboarding());
     
