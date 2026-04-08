@@ -2,26 +2,31 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-
-import 'package:hive_ce_flutter/hive_flutter.dart';
 import '../../../../core/injection/injection.dart';
-import '../../../../core/model/user/user_model.dart';
 // import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../../../widgets/button/primary_button.dart';
+import '../applications/home_cubit.dart';
+import '../applications/home_state.dart';
+import '../data/model/blog/blog_model.dart';
+import '../data/model/doctor/doctor_model.dart';
 
 @RoutePage()
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget implements AutoRouteWrapper {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) =>
+      BlocProvider(create: (context) => locator<HomeCubit>()..loadDoctorList(), child: this);
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final user = locator<Box<UserModel>>().get('user');
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.kBg,
@@ -48,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         SingleChildScrollView(
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -66,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 12),
       ],
     ),
-
   );
 
   // ─── App Bar ─────────────────────────────────────────────────────────────────
@@ -75,14 +78,18 @@ class _HomeScreenState extends State<HomeScreen> {
     child: SafeArea(
       bottom: false,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5,sigmaY: 5),
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(9.5, 10, 9.5, 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Logo image from assets
-              Image.asset(AppImages.splashImage, height: 32, fit: BoxFit.contain),
+              Image.asset(
+                AppImages.splashImage,
+                height: 32,
+                fit: BoxFit.contain,
+              ),
               // Notification bell
               Stack(
                 clipBehavior: Clip.none,
@@ -157,16 +164,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             gradient: const LinearGradient(
               colors: [
-                Color(0xFFFFFFFF),
-                Color(0xFFFFFFFF),
-                Color.fromARGB(0, 255, 255, 255),
+                AppColors.white,
+                AppColors.white,
+                AppColors.linearGradient,
               ],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
             ),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x0D0F0F0F),
+                color: AppColors.boxShadow,
                 blurRadius: 24,
                 offset: Offset(0, 14),
               ),
@@ -179,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     /// 🔹 IMAGE
                     Positioned.fill(
-                      child: Container(
+                      child: DecoratedBox(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
@@ -192,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 0.81,
                           ),
                           gradient: const LinearGradient(
-                            colors: [Colors.white, Colors.white],
+                            colors: [AppColors.white, AppColors.white],
                           ),
                         ),
                         child: Stack(
@@ -230,10 +237,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  Color(0xFFFFFFFF), // solid white
-                                  Color(0xCCFFFFFF), // semi transparent
-                                  Color(0x66FFFFFF), // lighter fade
-                                  Color(0x00FFFFFF), // fully transparent
+                                  AppColors.solidWhite, // solid white
+                                  AppColors.semiTransperent, // semi transparent
+                                  AppColors.lighterFade, // lighter fade
+                                  AppColors.fullyTransperent,// fully transparent
                                 ],
                                 stops: [
                                   0.0,
@@ -247,34 +254,40 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      const TextSpan(
-                                        text: 'Hey ',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w300,
-                                          color: Color(0xFF8B65D9),
+                                BlocBuilder<HomeCubit, HomeState>(
+                                  builder: (context, state) => state.maybeWhen(
+                                      loaded: (user,doctors,blogs) => Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              const TextSpan(
+                                                text: 'Hey ',
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: '${user?.name ?? 'User'}!',
+                                                style: const TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      TextSpan(
-                                        text: '${user?.name ?? 'User'}!',
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFF8B65D9),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                      
+                                      orElse: () => const Text('Hey User!'),
+                                    ),
                                 ),
                                 const SizedBox(height: 8),
                                 const Text(
                                   'Start by registering your first case to manage your health details and connect with medical experts.',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: Color(0xFF1A1A1A),
+                                    color: AppColors.textBlack,
                                     height: 1.5,
                                   ),
                                 ),
@@ -304,31 +317,12 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   // ─── Find Doctors ─────────────────────────────────────────────────────────────
-  Widget _buildFindDoctors() {
-    final doctors = [
-      const _DoctorModel(
-        'Chris Friedkly',
-        'Medical Oncologist',
-        AppImages.doctorImage1,
-        false,
-      ),
-      const _DoctorModel(
-        'Maggie Johnson',
-        'Radiation Oncologist',
-        AppImages.doctorImage2,
-        true,
-      ),
-      const _DoctorModel(
-        'Gael Harry',
-        'Specialized Oncologist',
-        AppImages.doctorImage3,
-        false,
-      ),
-    ];
-
-    return Column(
+ Widget _buildFindDoctors() => BlocBuilder<HomeCubit, HomeState>(
+  builder: (context, state) => state.maybeWhen(
+    loaded: (user, doctors, blogs) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 🔹 Header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
@@ -361,235 +355,230 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        const Gap(9),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: const Color.fromARGB(102, 208, 208, 208), // cleaner border
-              width: 0.8,
-            ),
-            color: Colors.white, // simpler than gradient
-          ),
-          child: Column(
-            children: List.generate(
-              3,
-                  (index) => Column(
-                children: [
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        // navigation later
-                      },
-                      borderRadius: BorderRadius.circular(80),
 
-                      splashColor: AppColors.buttonHover,
-                      child: _DoctorTile(doctor: doctors[index]),
+        const Gap(9),
+
+        // 🔥 IMPORTANT PART
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: const Color.fromARGB(102, 208, 208, 208),
+                  width: 0.8,
+                ),
+              ),
+              child: Column(
+                children: doctors.map((doctor) => InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(70),
+                    splashColor: AppColors.buttonHover,
+                    child: _DoctorTile(
+                      doctor: doctor, // ✅ DIRECT FROM STATE
                     ),
-                  ),
-                  // if (index < 2) const Divider(
-                  //   height: 1,
-                  //   // thickness: 0.5,
-                  //   color: Color(0xFFEEEEEE),
-                  // ),
-                ],
+                  )).toList(),
               ),
             ),
           ),
         ),
       ],
-    );
-  }
+    ),
+    orElse: () => const SizedBox(),
+  ),
+);
 
   // ─── Blogs ────────────────────────────────────────────────────────────────────
-  Widget _buildBlogs() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Blogs',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF2D2D2D),
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: const Text(
-                'See all',
+  Widget _buildBlogs() => BlocBuilder<HomeCubit, HomeState>(
+  builder: (context, state) => state.maybeWhen(
+    loaded: (user, doctors, blogs) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 🔹 Header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Blogs',
                 style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.kPurple,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D2D2D),
                 ),
               ),
-            ),
-          ],
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Text(
+                  'See all',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.kPurple,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      const Gap(10),
-      SizedBox(
-        height: 162,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: 2,
-          separatorBuilder: (_, __) => const Gap(10),
-          itemBuilder: (context, index) => _BlogCard(index: index),
+
+        const Gap(10),
+
+        // 🔥 BLOG LIST
+        SizedBox(
+          height: 162,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: blogs.length, // ✅ dynamic
+            separatorBuilder: (_, __) => const Gap(10),
+            itemBuilder: (context, index) {
+              final blog = blogs[index];
+              return _BlogCard(blog: blog); // ✅ pass blog
+            },
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    ),
+    orElse: () => const SizedBox(),
+  ),
+);
 }
 
 // ─── Doctor Model ──────────────────────────────────────────────────────────────
-class _DoctorModel {
-  final String name;
-  final String specialty;
-  final String imagePath;
-  final bool hasArrow;
 
-  const _DoctorModel(this.name, this.specialty, this.imagePath, this.hasArrow);
-}
 
 // ─── Doctor Tile ──────────────────────────────────────────────────────────────
 class _DoctorTile extends StatelessWidget {
-  final _DoctorModel doctor;
+  final DoctorModel doctor;
 
   const _DoctorTile({required this.doctor});
 
   @override
   Widget build(BuildContext context) => ListTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
 
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            AppImages.doctorImage1, // temp (API has no image yet)
+            width: 46,
+            height: 46,
+            fit: BoxFit.cover,
+          ),
+        ),
 
-    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-    leading: Image.asset(
-      doctor.imagePath,
-      width: 46,
-      height: 46,
-      fit: BoxFit.cover,
-    ),
-    title: Text(
-      doctor.name,
-      style: const TextStyle(
-        fontSize: 13.5,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF2D2D2D),
-      ),
-    ),
-    subtitle: Text(
-      doctor.specialty,
-      style: const TextStyle(
-        fontSize: 12,
-        color: Color(0xFF9E8CB5),
-        fontWeight: FontWeight.w400,
-      ),
-    ),
+        title: Text(
+          doctor.name, // ✅ FROM REPOSITORY
+          style: const TextStyle(
+            fontSize: 13.5,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D2D2D),
+          ),
+        ),
 
-
-  );
+        subtitle: Text(
+          doctor.specialization, // ✅ FROM REPOSITORY
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF9E8CB5),
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      );
 }
 
 // ─── Blog Card ────────────────────────────────────────────────────────────────
 class _BlogCard extends StatelessWidget {
-  final int index;
+  final BlogModel blog;
 
-  const _BlogCard({required this.index});
+  const _BlogCard({required this.blog});
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    width: 163,
-    height: 162,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(14),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // ── Real blog image — replace color container with Image.asset ──
-          Image.asset(
-            AppImages.bolgImage1,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
-              color: const Color(0xFFB39DDB),
-              child: const Icon(Icons.image, color: Colors.white38, size: 40),
-            ),
-          ),
-
-          // ── Dark gradient overlay from bottom ──
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.transparent, Colors.black.withOpacity(0.65)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0.35, 1.0],
+        width: 163,
+        height: 162,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // 🔹 Image (static for now)
+              Image.asset(
+                AppImages.bolgImage1,
+                fit: BoxFit.cover,
               ),
-            ),
-          ),
 
-          // ── Bookmark icon top-right ──
-          Positioned(
-            top: 8,
-            right: 8,
-            child: Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.88),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.bookmark_border_rounded,
-                size: 15,
-                color: Color(0xFF7B5EA7),
-              ),
-            ),
-          ),
-
-          // ── Title bottom-left ──
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.35, 1.0],
-                  colors: [
-                    Colors.transparent,
-                    const Color(0xFF8E63F2).withOpacity(0.5),
-                  ],
+              // 🔹 Gradient overlay
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.65),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [0.35, 1.0],
+                  ),
                 ),
               ),
-              child: const Text(
-                'Early Detection Saves Lives',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  height: 1.35,
+
+              // 🔹 Bookmark icon
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.88),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.bookmark_border_rounded,
+                    size: 15,
+                    color: Color(0xFF7B5EA7),
+                  ),
                 ),
               ),
-            ),
+
+              // 🔹 Blog Title (FROM API)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Text(
+                    blog.title, // ✅ dynamic from repo
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
