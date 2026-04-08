@@ -22,10 +22,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final user = locator<Box<UserModel>>().get('user');
-
-
-
-
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.kBg,
@@ -456,55 +452,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ],
   );
-
-  // // ─── Bottom Nav Bar ───────────────────────────────────────────────────────────
-  // Widget _buildBottomNavBar() => Container(
-  //   margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-  //   decoration: BoxDecoration(
-  //     color: Colors.white,
-  //     borderRadius: BorderRadius.circular(32),
-  //     boxShadow: [
-  //       BoxShadow(
-  //         color: Colors.black.withOpacity(0.10),
-  //         blurRadius: 20,
-  //         offset: const Offset(0, 4),
-  //       ),
-  //     ],
-  //   ),
-  //   child: ClipRRect(
-  //     borderRadius: BorderRadius.circular(32),
-  //     child: BottomAppBar(
-  //       color: Colors.white,
-  //       shape: const CircularNotchedRectangle(),
-  //       notchMargin: 44,
-  //       elevation: 0,
-  //       padding: EdgeInsets.zero,
-  //       child: SizedBox(
-  //         height: 30,
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //           children: [
-  //             _NavItem(
-  //               icon: Icons.home_outlined,
-  //               selectedIcon: Icons.home_rounded,
-  //               label: 'Home',
-  //               selected: _selectedIndex == 0,
-  //               onTap: () => setState(() => _selectedIndex = 0),
-  //             ),
-  //
-  //             _NavItem(
-  //               icon: Icons.person_outline_rounded,
-  //               selectedIcon: Icons.person_rounded,
-  //               label: 'Profile',
-  //               selected: _selectedIndex == 1,
-  //               onTap: () => setState(() => _selectedIndex = 1),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   ),
-  // );
 }
 
 // ─── Doctor Model ──────────────────────────────────────────────────────────────
@@ -646,53 +593,3 @@ class _BlogCard extends StatelessWidget {
     ),
   );
 }
-
-// ─── Nav Item ─────────────────────────────────────────────────────────────────
-// class _NavItem extends StatelessWidget {
-//   final IconData icon;
-//   final IconData selectedIcon;
-//   final String label;
-//   final bool selected;
-//   final VoidCallback onTap;
-//
-//   const _NavItem({
-//     required this.icon,
-//     required this.selectedIcon,
-//     required this.label,
-//     required this.selected,
-//     required this.onTap,
-//     super.key,
-//   });
-
-  // @override
-  // Widget build(BuildContext context) => GestureDetector(
-  //   onTap: onTap,
-  //   behavior: HitTestBehavior.opaque,
-  //   child: SizedBox(
-  //     width: 64,
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: [
-  //         Icon(
-  //           selected ? selectedIcon : icon,
-  //           color: selected ? const Color(0xFF7B5EA7) : const Color(0xFFBDBDBD),
-  //           size: 25,
-  //         ),
-  //         const SizedBox(height: 3),
-  //         Text(
-  //           label,
-  //           style: TextStyle(
-  //             fontSize: 10,
-  //             color: selected
-  //                 ? const Color(0xFF7B5EA7)
-  //                 : const Color(0xFFBDBDBD),
-  //             fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   ),
-  // );
-// }
-
-

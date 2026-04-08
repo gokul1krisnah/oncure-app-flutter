@@ -12,6 +12,7 @@ void main() async {
 
   await HiveConfig.init();
   await configureInjection();
+ 
   runApp(OverlaySupport.global(child: MyApp()));
 }
 
