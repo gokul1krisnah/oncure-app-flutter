@@ -11,4 +11,6 @@ abstract class AppImages {
   static const String doctorImage1 = 'assets/images/image1.png';
   static const String doctorImage2 = 'assets/images/image2.png';
   static const String doctorImage3 = 'assets/images/image3.png';
+  static const String bolgImage1 = 'assets/images/blogs1.png';
+  static const String bolgImage2 = 'assets/images/blogs2.png';
 }

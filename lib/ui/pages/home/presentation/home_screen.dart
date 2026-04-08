@@ -7,6 +7,8 @@ import 'package:gap/gap.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import '../../../../core/injection/injection.dart';
 import '../../../../core/model/user/user_model.dart';
+// import '../../../../shared/theme/app_colors.dart';
+import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_images.dart';
 import '../../../widgets/button/primary_button.dart';
 
@@ -20,14 +22,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final user = locator<Box<UserModel>>().get('user');
-  int _selectedIndex = 0;
 
-  static const Color kPurple = Color(0xFF7B5EA7);
-  static const Color kBg = Color(0xFFF0F0F5);
+
+
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: kBg,
+    backgroundColor: AppColors.kBg,
     extendBody: true,
     body: Stack(
       children: [
@@ -50,94 +51,93 @@ class _HomeScreenState extends State<HomeScreen> {
             height: double.infinity,
           ),
         ),
-        SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildAppBar(),
-                const SizedBox(height: 12),
-                _buildWelcomeCard(),
-                const SizedBox(height: 16),
-                _buildFindDoctors(),
-                const SizedBox(height: 16),
-                _buildBlogs(),
-                const SizedBox(height: 100),
-              ],
-            ),
+        SingleChildScrollView(
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Gap(150),
+              _buildWelcomeCard(),
+              const Gap(30),
+              _buildFindDoctors(),
+              const Gap(30),
+              _buildBlogs(),
+              const Gap(100),
+            ],
           ),
         ),
+        _buildAppBar(),
+        const SizedBox(height: 12),
       ],
     ),
-    bottomNavigationBar: _buildBottomNavBar(),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {},
-      backgroundColor: kPurple,
-      elevation: 6,
-      shape: const CircleBorder(),
-      child: const Icon(Icons.add, color: Colors.white, size: 30),
-    ),
-    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
   );
 
   // ─── App Bar ─────────────────────────────────────────────────────────────────
-  Widget _buildAppBar() => SafeArea(
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(9.5, 10, 9.5, 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Logo image from assets
-          Image.asset(AppImages.splashImage, height: 32, fit: BoxFit.contain),
-          // Notification bell
-          Stack(
-            clipBehavior: Clip.none,
+
+  Widget _buildAppBar() => ClipRRect(
+    child: SafeArea(
+      bottom: false,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5,sigmaY: 5),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(9.5, 10, 9.5, 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+              // Logo image from assets
+              Image.asset(AppImages.splashImage, height: 32, fit: BoxFit.contain),
+              // Notification bell
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.notifications_outlined,
-                  color: kPurple,
-                  size: 22,
-                ),
-              ),
-              Positioned(
-                top: -1,
-                right: -1,
-                child: Container(
-                  width: 17,
-                  height: 17,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE53935),
-                    shape: BoxShape.circle,
+                    child: const Icon(
+                      Icons.notifications_outlined,
+                      color: AppColors.kPurple,
+                      size: 22,
+                    ),
                   ),
-                  child: const Center(
-                    child: Text(
-                      '3',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
+                  Positioned(
+                    top: -1,
+                    right: -1,
+                    child: Container(
+                      width: 17,
+                      height: 17,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE53935),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '3',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     ),
   );
@@ -150,7 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
         filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
         child: Container(
           width: 400,
-          height: 360, // reduced height (since no button inside)
+          height: 360,
+          // reduced height (since no button inside)
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -305,6 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ),
   );
+
   // ─── Find Doctors ─────────────────────────────────────────────────────────────
   Widget _buildFindDoctors() {
     final doctors = [
@@ -355,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'See all',
                   style: TextStyle(
                     fontSize: 13,
-                    color: kPurple,
+                    color: AppColors.kPurple,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -369,35 +371,34 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: const Color.from(
-                alpha: 0.4,
-                red: 0.816,
-                green: 0.816,
-                blue: 0.816,
-              ),
-              width: 0.81,
+              color: const Color.fromARGB(102, 208, 208, 208), // cleaner border
+              width: 0.8,
             ),
-            gradient: const LinearGradient(
-              colors: [Colors.white, Colors.white],
-            ),
+            color: Colors.white, // simpler than gradient
           ),
-          child: SizedBox(
-            height: 270,
-            child: ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: doctors.length,
-              separatorBuilder: (_, __) => const Divider(
-                height: 1,
-                thickness: 0.5,
-                indent: 62,
-                endIndent: 16,
-                color: Color(0xFFEEEEEE),
-              ),
-              itemBuilder: (context, index) => InkWell(
-                onTap: () {},
-                splashColor: Colors.black,
-                child: _DoctorTile(doctor: doctors[index]),
+          child: Column(
+            children: List.generate(
+              3,
+                  (index) => Column(
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        // navigation later
+                      },
+                      borderRadius: BorderRadius.circular(80),
+
+                      splashColor: AppColors.buttonHover,
+                      child: _DoctorTile(doctor: doctors[index]),
+                    ),
+                  ),
+                  // if (index < 2) const Divider(
+                  //   height: 1,
+                  //   // thickness: 0.5,
+                  //   color: Color(0xFFEEEEEE),
+                  // ),
+                ],
               ),
             ),
           ),
@@ -434,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 'See all',
                 style: TextStyle(
                   fontSize: 13,
-                  color: kPurple,
+                  color: AppColors.kPurple,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -442,68 +443,68 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      const SizedBox(height: 6),
+      const Gap(10),
       SizedBox(
         height: 162,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: 3,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemCount: 2,
+          separatorBuilder: (_, __) => const Gap(10),
           itemBuilder: (context, index) => _BlogCard(index: index),
         ),
       ),
     ],
   );
 
-  // ─── Bottom Nav Bar ───────────────────────────────────────────────────────────
-  Widget _buildBottomNavBar() => Container(
-    margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(32),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.10),
-          blurRadius: 20,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(32),
-      child: BottomAppBar(
-        color: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        child: SizedBox(
-          height: 62,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.home_outlined,
-                selectedIcon: Icons.home_rounded,
-                label: 'Home',
-                selected: _selectedIndex == 0,
-                onTap: () => setState(() => _selectedIndex = 0),
-              ),
-              const SizedBox(width: 64),
-              _NavItem(
-                icon: Icons.person_outline_rounded,
-                selectedIcon: Icons.person_rounded,
-                label: 'Profile',
-                selected: _selectedIndex == 1,
-                onTap: () => setState(() => _selectedIndex = 1),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
+  // // ─── Bottom Nav Bar ───────────────────────────────────────────────────────────
+  // Widget _buildBottomNavBar() => Container(
+  //   margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+  //   decoration: BoxDecoration(
+  //     color: Colors.white,
+  //     borderRadius: BorderRadius.circular(32),
+  //     boxShadow: [
+  //       BoxShadow(
+  //         color: Colors.black.withOpacity(0.10),
+  //         blurRadius: 20,
+  //         offset: const Offset(0, 4),
+  //       ),
+  //     ],
+  //   ),
+  //   child: ClipRRect(
+  //     borderRadius: BorderRadius.circular(32),
+  //     child: BottomAppBar(
+  //       color: Colors.white,
+  //       shape: const CircularNotchedRectangle(),
+  //       notchMargin: 44,
+  //       elevation: 0,
+  //       padding: EdgeInsets.zero,
+  //       child: SizedBox(
+  //         height: 30,
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //           children: [
+  //             _NavItem(
+  //               icon: Icons.home_outlined,
+  //               selectedIcon: Icons.home_rounded,
+  //               label: 'Home',
+  //               selected: _selectedIndex == 0,
+  //               onTap: () => setState(() => _selectedIndex = 0),
+  //             ),
+  //
+  //             _NavItem(
+  //               icon: Icons.person_outline_rounded,
+  //               selectedIcon: Icons.person_rounded,
+  //               label: 'Profile',
+  //               selected: _selectedIndex == 1,
+  //               onTap: () => setState(() => _selectedIndex = 1),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   ),
+  // );
 }
 
 // ─── Doctor Model ──────────────────────────────────────────────────────────────
@@ -512,22 +513,21 @@ class _DoctorModel {
   final String specialty;
   final String imagePath;
   final bool hasArrow;
+
   const _DoctorModel(this.name, this.specialty, this.imagePath, this.hasArrow);
 }
 
 // ─── Doctor Tile ──────────────────────────────────────────────────────────────
 class _DoctorTile extends StatelessWidget {
   final _DoctorModel doctor;
+
   const _DoctorTile({required this.doctor});
 
   @override
   Widget build(BuildContext context) => ListTile(
-    onTap: () {},
-    splashColor: Colors.black,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    
+
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
     leading: Image.asset(
       doctor.imagePath,
@@ -551,31 +551,21 @@ class _DoctorTile extends StatelessWidget {
         fontWeight: FontWeight.w400,
       ),
     ),
-      // trailing: Container(
-      //       width: 32,
-      //       height: 32,
-      //       decoration: BoxDecoration(
-      //         color: const Color(0xFFEDE7F6),
-      //         borderRadius: BorderRadius.circular(9),
-      //       ),
-      //       // child: const Icon(
-      //       //   // Icons.arrow_forward_ios_rounded,
-      //       //   size: 13,
-      //       //   color: Color(0xFF7B5EA7),
-      //       // ),
-      //     )
-        
+
+
   );
 }
 
 // ─── Blog Card ────────────────────────────────────────────────────────────────
 class _BlogCard extends StatelessWidget {
   final int index;
+
   const _BlogCard({required this.index});
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    width: 148,
+    width: 163,
+    height: 162,
     child: ClipRRect(
       borderRadius: BorderRadius.circular(14),
       child: Stack(
@@ -583,7 +573,7 @@ class _BlogCard extends StatelessWidget {
         children: [
           // ── Real blog image — replace color container with Image.asset ──
           Image.asset(
-            'assets/images/blog${index + 1}.jpg',
+            AppImages.bolgImage1,
             fit: BoxFit.cover,
             errorBuilder: (_, __, ___) => Container(
               color: const Color(0xFFB39DDB),
@@ -623,17 +613,31 @@ class _BlogCard extends StatelessWidget {
           ),
 
           // ── Title bottom-left ──
-          const Positioned(
-            left: 10,
-            right: 10,
-            bottom: 10,
-            child: Text(
-              'Early Detection Saves Lives',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                height: 1.35,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0.35, 1.0],
+                  colors: [
+                    Colors.transparent,
+                    const Color(0xFF8E63F2).withOpacity(0.5),
+                  ],
+                ),
+              ),
+              child: const Text(
+                'Early Detection Saves Lives',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w600,
+                  height: 1.35,
+                ),
               ),
             ),
           ),
@@ -644,49 +648,51 @@ class _BlogCard extends StatelessWidget {
 }
 
 // ─── Nav Item ─────────────────────────────────────────────────────────────────
-class _NavItem extends StatelessWidget {
-  final IconData icon;
-  final IconData selectedIcon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+// class _NavItem extends StatelessWidget {
+//   final IconData icon;
+//   final IconData selectedIcon;
+//   final String label;
+//   final bool selected;
+//   final VoidCallback onTap;
+//
+//   const _NavItem({
+//     required this.icon,
+//     required this.selectedIcon,
+//     required this.label,
+//     required this.selected,
+//     required this.onTap,
+//     super.key,
+//   });
 
-  const _NavItem({
-    required this.icon,
-    required this.selectedIcon,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-    super.key,
-  });
+  // @override
+  // Widget build(BuildContext context) => GestureDetector(
+  //   onTap: onTap,
+  //   behavior: HitTestBehavior.opaque,
+  //   child: SizedBox(
+  //     width: 64,
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Icon(
+  //           selected ? selectedIcon : icon,
+  //           color: selected ? const Color(0xFF7B5EA7) : const Color(0xFFBDBDBD),
+  //           size: 25,
+  //         ),
+  //         const SizedBox(height: 3),
+  //         Text(
+  //           label,
+  //           style: TextStyle(
+  //             fontSize: 10,
+  //             color: selected
+  //                 ? const Color(0xFF7B5EA7)
+  //                 : const Color(0xFFBDBDBD),
+  //             fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   ),
+  // );
+// }
 
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    behavior: HitTestBehavior.opaque,
-    child: SizedBox(
-      width: 64,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            selected ? selectedIcon : icon,
-            color: selected ? const Color(0xFF7B5EA7) : const Color(0xFFBDBDBD),
-            size: 25,
-          ),
-          const SizedBox(height: 3),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              color: selected
-                  ? const Color(0xFF7B5EA7)
-                  : const Color(0xFFBDBDBD),
-              fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+

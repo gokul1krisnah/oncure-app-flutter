@@ -12,6 +12,13 @@ abstract class AppColors {
   static const Color textBlack = Color(0xFF222222);
   static const Color textBlack2 = Color(0xFF121111);
   static const Color grey = Color(0xFFA1A0A0);
+  
+  static const Color lightPurple = Color.fromRGBO(225, 190, 231, 1);
+  static const Color buttonHover = Color(0xFFEFE3F7);
+  static const Color kPurple = Color(0xFF7B5EA7);
+  static const Color kBg = Color(0xFFF0F0F5);
+
+
 
     static const Color navBarShadow = Color(0x0A400A76);
   static const Color locationAppBarGrey = Color(0xFF595D62);
